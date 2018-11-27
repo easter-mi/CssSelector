@@ -5,6 +5,7 @@ import (
 	"regexp"
 )
 
+//Given a node and a css query expresion,return a slice of node
 func QueryFromCssExpression(node *html.Node,cssExpression string)(res []*html.Node){
 	//preDeal make it standard Formate
 	cssExpression=preDeal(cssExpression)
@@ -16,7 +17,7 @@ func QueryFromCssExpression(node *html.Node,cssExpression string)(res []*html.No
 	}
 	return res
 } 
-
+//Given a node and a cssGroup query expression,return a slice of node
 func QueryFromCssGroup(node *html.Node,cssGroup string)(res []*html.Node){
 	atoms,joiners:=getAtomsAndJoiners(group)
 	tmp:=[]*html.Node
@@ -40,7 +41,7 @@ func QueryFromCssGroup(node *html.Node,cssGroup string)(res []*html.Node){
 		}
 	}
 }
-
+//Deal a css query expression,so that is can be analyzed correctlly
 func preDeal(cssExpression string)string{
 	fp:=regexp.MustCompile(`\s+`)
 	p1:=fp.ReplaceAllLiteralString(pattern," ")
@@ -50,9 +51,11 @@ func preDeal(cssExpression string)string{
 	p1=strings.Trim(p1," ")
 	return p1
 }
+//Split a css query expression into several groups
 func getGroups(cssStdExpression string)[]string{
 	return strings.Split(cssStdExpression,",")
 }
+//Analyze a css query group，Split it into a slice of css query atom and a slice of joiner
 func getAtomsAndJoiners(cssGroupExpression string)(atoms,atomJioners []string){
 	// joinMap:=map[string]string{"+":"下一个",">":"子元素"," ":"内的","~","后面的"}
 	atomeReg:=regexp.MustCompile(`([+> ~])`)
@@ -60,7 +63,7 @@ func getAtomsAndJoiners(cssGroupExpression string)(atoms,atomJioners []string){
 	atomJioners:=atomeReg.FindAllString(itemSelector,-1)
 	return 
 }
-
+//Given a node and css atom query expression and return a slice of node
 func queryFromCssAtom(node *html.Node,cssAtom string)(res []*html.Node){
 	attrReg:=regexp.MustCompile(`(\w+)?\([(\w)([^$*]?=)"(\w+)"\])+`)
 	switch{
@@ -112,6 +115,7 @@ func queryFromCssAtom(node *html.Node,cssAtom string)(res []*html.Node){
 	}
 }
 
+//Given a node and Filter implementation and return a slice of node.
 func Traversal(node *html.Node,filter Filter)(res []*html.Node){
 	if filter.Accept(node){
 		res=append(res,node)
@@ -221,6 +225,8 @@ func Attribute2Map(attrs []html.Attribute)map[string]string{
 	}
 }
 
+
+//Get all child node of the param node
 func ChildElements(node *html.Node)[]*html.Node{
 	res:=[]*html.Node{}
 	if node.FirstChild!=nil{
@@ -232,6 +238,7 @@ func ChildElements(node *html.Node)[]*html.Node{
 	}
 	return res
 }
+//Get all elements node behind the param node
 func BehindElements(node *html.Node)[]*html.Node{
 	res:=[]*html.Node{}
 	for next:=node.NextSibling;next!=nil;next=next.NextSibling{
