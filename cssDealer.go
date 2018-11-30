@@ -88,7 +88,7 @@ func getAtomsAndJoiners(cssGroupExpression string)(atoms,atomJioners []string){
 //Given a node and css atom query expression and return a slice of node
 func queryFromCssAtom(node *html.Node,cssAtom string)(res []*html.Node){
 	res=[]*html.Node{}
-	attrReg:=regexp.MustCompile(`^(\w+)?(\[(\w)([^$*]?=)"(\w+)"\])+$`)
+	attrReg:=regexp.MustCompile(`^(\w+)?(\[(\w+)([^$*]?=)"(\w+)"\])+$`)
 	orderReg:=regexp.MustCompile(`^(\w+)?:(((\w+)-)+\w+)\((\d+)\)$`)
 	switch{
 		case cssAtom=="*":{
@@ -140,7 +140,6 @@ func queryFromCssAtom(node *html.Node,cssAtom string)(res []*html.Node){
 			gs:=orderReg.FindStringSubmatch(cssAtom)
 			onum,_:=strconv.Atoi(gs[5])
 			onumber:=uint(onum)
-			fmt.Println(gs[1],"\t",gs[2],"\t",gs[5],"\t",onum,"\t",onumber)
 			switch gs[2]{
 				case "nth-child":{
 					ns:=Traversal(node,OrderFilter{Order:onumber,PositiveSequense:true})
