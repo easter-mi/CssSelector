@@ -7,7 +7,7 @@ import (
 )
 
 //Given a node and a css query expresion,return a slice of node
-func QueryFromCssExpression(node *html.Node,cssExpression string)(res []*html.Node){
+func Query(node *html.Node,cssExpression string)(res []*html.Node){
 	res=[]*html.Node{}
 	//preDeal make it standard Formate
 	cssExpression=preDeal(cssExpression)
@@ -336,8 +336,13 @@ func BehindElements(node *html.Node)[]*html.Node{
 }
 
 func InnerText(node *html.Node)string{
-	if node.FirstChild!=nil&&node.FirstChild.Type==html.TextNode{
-		return node.FirstChild.Data
+	text:=""
+	for n:=node.FirstChild;n!=nil;n=n.NextSibling{
+		if n.Type==html.TextNode{
+			text+=" "+n.Data
+		}else{
+			text+=" "+InnerText(n)
+		}
 	}
-	return ""
+	return text
 }
