@@ -4,7 +4,6 @@ import (
 	"strings"
 	"regexp"
 	"strconv"
-	"fmt"
 )
 
 //Given a node and a css query expresion,return a slice of node
@@ -43,7 +42,8 @@ func queryFromAtomAndJoiners(nodes []*html.Node,atoms,joiners []string)[]*html.N
 		for _,n:=range tmp{
 			switch(joiners[0]){
 				case " ":{
-					tmp1=append(tmp1,Traversal(n,AttrFilter{})...)
+					// tmp1=append(tmp1,Traversal(n,AttrFilter{})...)
+					tmp1=append(tmp1,n)
 				}
 				case "+":{
 					tmp1=append(tmp1,n.NextSibling)
