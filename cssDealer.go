@@ -4,6 +4,7 @@ import (
 	"strings"
 	"regexp"
 	"strconv"
+	// "fmt"
 )
 
 //Given a node and a css query expresion,return a slice of node
@@ -42,7 +43,6 @@ func queryFromAtomAndJoiners(nodes []*html.Node,atoms,joiners []string)[]*html.N
 		for _,n:=range tmp{
 			switch(joiners[0]){
 				case " ":{
-					// tmp1=append(tmp1,Traversal(n,AttrFilter{})...)
 					tmp1=append(tmp1,n)
 				}
 				case "+":{
@@ -88,7 +88,7 @@ func getAtomsAndJoiners(cssGroupExpression string)(atoms,atomJioners []string){
 //Given a node and css atom query expression and return a slice of node
 func queryFromCssAtom(node *html.Node,cssAtom string)(res []*html.Node){
 	res=[]*html.Node{}
-	attrReg:=regexp.MustCompile(`^(\w+)?(\[(\w+)([^$*]?=)"(\w+)"\])+$`)
+	attrReg:=regexp.MustCompile(`^(\w+)?(\[(\w+)([\^\$\*]?=)"([0-9a-zA-Z_-]+)"\])+$`)
 	orderReg:=regexp.MustCompile(`^(\w+)?:(((\w+)-)+\w+)\((\d+)\)$`)
 	switch{
 		case cssAtom=="*":{
@@ -174,7 +174,7 @@ func queryFromCssAtom(node *html.Node,cssAtom string)(res []*html.Node){
 			cssAtom=cssAtom[1:len(cssAtom)-1]
 			attrs:=strings.Split(cssAtom,"][")
 			attrFilter:=AttrFilter{Name:tN,AttrCondis:[]AttrCondtion{}}
-			attrExpReg:=regexp.MustCompile(`(\w+)(([*]=)(\w+))?`)
+			attrExpReg:=regexp.MustCompile(`^(\w+)(([\^\$\*]?=)"([0-9a-zA-Z_-]+)")?$`)
 			for _,attr:=range attrs{
 				if attrExpReg.MatchString(attr){
 					gs:=attrExpReg.FindStringSubmatch(attr)
